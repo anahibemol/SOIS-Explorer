@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Linq;
 using System.Text;
@@ -12,13 +12,13 @@ namespace NullUtils
     {
 
 
-        public class Tasks
+        public class SoisTask
         {
 
             
-            public static void InspectFiles() //Get the properties of all files in a folder
+            public static void InspectFiles(bool SeeAll) //Get the properties of all files in a folder
             {
-                    
+                   
                 Console.WriteLine("Write the Path of the folder you want to inspect");
         
                 // Example: "C:\Users\USUARIO\Documents\Programação\Sois File Manager\Programs"
@@ -26,7 +26,7 @@ namespace NullUtils
                 Console.WriteLine("");
                 bool dirExists = Directory.Exists(rootPath);
                 bool namingFormat = true;
-                if (rootPath is not null) { namingFormat    = rootPath.Contains(":/"); }
+                if (rootPath is not null) { namingFormat    = rootPath.Contains(@":\"); }
                 
                 if (rootPath is not null && dirExists == true) //guarantees the program receives a valid file
               {
@@ -39,15 +39,19 @@ namespace NullUtils
                 Console.WriteLine(@$"                        { Path.GetFileName(file) } 's Properties:
                 Name:              {info.Name}
                 Type:              {Extra.TypeCheck((Convert.ToString(info.Extension)))} ({info.Extension})
+                Directory:         {Path.GetDirectoryName(file)}");
+                if (SeeAll == true)
+              { Console.WriteLine(@$"
                 Last Acessed At:   {info.LastAccessTime}
                 Last Modified At:  {info.LastWriteTimeUtc}
                 Creation Time:     {info.CreationTimeUtc}
-                Size:              { info.Length } Bytes
-                Directory:         {Path.GetDirectoryName(file)}
-                Relative Path:     {Path.GetRelativePath(rootPath, file)} 
-                from {rootPath}
+                Size:              { info.Length } Bytes 
+                Relative Path:     {Path.GetRelativePath(rootPath, file)} "); }
+                Console.WriteLine(" ")
+                
+               
         
-                ");      
+                ;       
                 }      
         
               }
@@ -57,25 +61,84 @@ namespace NullUtils
                 Console.ReadLine();                 
             }
 
-            public static void CreateFiles() //Creates a folder
+            public static void ViewFiles() //Simplified InspectFiles()
             {
-                Console.WriteLine("Type the Path of the desired new Directory");
+                InspectFiles(false);
+            }
+
+            public static void CreateFiles() //Creates a file/folder
+            {
+                Console.WriteLine("Type the Path of the desired new File/Directory");
                 string? rootPath = Convert.ToString(Console.ReadLine());
-                Console.WriteLine("Write the name of the new Directory");
+                Console.WriteLine("Write the name of the new File/Directory");
                 string? dirName = Convert.ToString(Console.ReadLine());
 
+                Console.WriteLine("Is it a File or a Directory ?");
+                string? createFilesSwitch = Convert.ToString(Console.ReadLine());
+                if (createFilesSwitch is not null) {createFilesSwitch.ToUpper();}
 
-                string newPath = rootPath + @"\" + dirName + @"\";
+
+                string newPath = rootPath + @"\" + dirName;
+                if (createFilesSwitch == "DIRECTORY") {newPath = newPath + @"\"; }
  
                 bool dirExists = Directory.Exists(newPath);
                 
-                if (dirExists == false) { Directory.CreateDirectory(newPath);}
+                if (dirExists == false) 
+                {
+                    if (createFilesSwitch == "DIRECTORY" ^ createFilesSwitch == "FOLDER")
+                     { Directory.CreateDirectory(newPath); }
+                    if (createFilesSwitch == "FILE")
+                     { File.Create(newPath); }
 
-                else                    { Console.WriteLine("This Directory already exists"); }
+                }
+                else  { Console.WriteLine("This Directory already exists"); }
 
 
             }
-        
+
+            public static void RenameFiles() //Rebanes a file/folder
+            {
+
+                Console.WriteLine("Write the Path of the Folder/File You want to Rename");
+                string? rootPath = string.Empty;
+                rootPath = Convert.ToString(Console.ReadLine());
+                Console.WriteLine("Is it a File or a Folder?");
+                string? FileOrFolder = Convert.ToString(Console.ReadLine());
+                if (FileOrFolder is not null) { FileOrFolder.ToUpper(); }
+                switch (FileOrFolder)
+                {
+                    case "FILE":
+                        Console.WriteLine("Write the old name of the file");
+                        string? oldNameFI = Console.ReadLine();
+                        Console.WriteLine("Write the new name of the file");
+                        string? newNameFI = Console.ReadLine();
+
+                        if (oldNameFI is not null && newNameFI is not null && rootPath is not null)
+                        {
+                            string newPath = rootPath.Replace(oldNameFI, newNameFI);
+
+                            File.Move(rootPath, newPath);
+                        }
+                    break;
+
+                    case "FOLDER":
+                        Console.WriteLine("Write the old name of the folder");
+                        string? oldNameFO = Console.ReadLine();
+                        Console.WriteLine("Write the new name of the folder");
+                        string? newNameFO = Console.ReadLine();
+
+                        if (oldNameFO is not null && newNameFO is not null && rootPath is not null)
+                        {
+                            string newPath = rootPath.Replace(oldNameFO, newNameFO);
+
+                            Directory.Move(rootPath, newPath);
+                        }
+                    break;
+                }
+                
+
+            }
+
             public static void CopyFiles() //Copy a file/folder
             {
                 Console.WriteLine("Type the Path of the file or folder to be copied");
@@ -182,11 +245,16 @@ namespace NullUtils
             {
              Console.WriteLine(@"
              Write the following commands For what you want to do:
-             |INSPECT - To get the files of a folder (an their properties).
-             |CREATE  - To create a new folder.
-             |COPY    - To Copy the files of a folder to another.
-             |MOVE    - To Move the files of a folder to another.
-             |DELETE  - To Delete the files of a folder.
+
+             |VIEW    - To Get the Files of a Folder (and their path).
+             |INSPECT - To Get the Files of a Folder (and their properties).
+             |CREATE  - To Create a new File or a Folder.
+             |RENAME  - Rename a File or a Folder.
+             |COPY    - To Copy the Files of a Folder to another.
+             |MOVE    - To Move the Files of a Folder to another.
+             |DELETE  - To Delete the Files of a Folder.
+             |EXIT    - Exits the program.
+             |__________________________________________ ___ __ __ _ _ _
             ");
                 string MainSwitcher = "BLANK";
                 string? MS = Convert.ToString(Console.ReadLine());
@@ -194,24 +262,36 @@ namespace NullUtils
                 
                 switch (MainSwitcher)
                 {
+                    case "VIEW":
+                        SoisTask.ViewFiles();
+                    break;
+
                     case "INSPECT":
-                        Tasks.InspectFiles();
+                        SoisTask.InspectFiles(true);
                     break;
 
                     case "CREATE":
-                        Tasks.CreateFiles();
+                        SoisTask.CreateFiles();
+                    break;
+
+                    case "RENAME":
+                        SoisTask.RenameFiles();
                     break;
 
                     case "COPY":
-                        Tasks.CopyFiles();
+                        SoisTask.CopyFiles();
                     break;
 
                     case "MOVE":
-                        Tasks.MoveFiles();
+                        SoisTask.MoveFiles();
                     break;
 
                     case "DELETE":
-                        Tasks.DeleteFiles();
+                        SoisTask.DeleteFiles();
+                    break;
+
+                    case "EXIT":
+                        whiler = false;
                     break;
                 
                 }
@@ -275,7 +355,7 @@ namespace NullUtils
                 public static string TypeCheck(params string [] file)
                 {
                     var y = "";
-
+                    string plang = "Unkown";
                                     
                     for (int i = 0;  ;i++) 
                     {
@@ -302,7 +382,8 @@ namespace NullUtils
                         if
                         (
                             y == ".mus" ^ y == ".musx" ^ y == ".gp" ^ y == ".mxl"  ^ y == ".mei" ^
-                            y == ".sib" ^ y == ".mscx" ^ y == ".ly" ^ y == ".mscz" ^ y == ".smdl"
+                            y == ".sib" ^ y == ".mscx" ^ y == ".ly" ^ y == ".mscz" ^ y == ".smdl"^
+                            y == ".mscz,"
                         )
 
                         { return "Sheet Music"; }
@@ -349,10 +430,40 @@ namespace NullUtils
 
                         if
                         (
-                            y == ".txt" ^ y == ".html" ^ y ==".xml" ^ y == ".md" ^ y == ".rss"
+                            y == ".txt" ^  y ==".xml" ^ y == ".md" ^ y == ".rss"
                         )
 
                         { return "Markup Language";}
+
+
+
+                        if (y == ".cbl" ^ y == ".cob") {plang = "COBOL";}
+                        if (y == ".ps1" ^ y == ".psc1" ^ y == ".psm1" ^ y == ".psd1") {plang = "Powershell";}
+                        if (y == ".pl" ^ y == ".pm") {plang = "Perl";} 
+                        if (y == ".js") {plang = "JavaScript";} if (y == ".java") {plang = "Java";}   
+                        if (y == ".html") {plang = "HTML";}     if (y == ".css") {plang = "CSS";}     
+                        if (y == ".py") {plang = "Python";}     if (y == ".sql") {plang = "SQL";}     
+                        if (y == ".cs") {plang = "C#";}         if (y == ".cpp") {plang = "C++";}     
+                        if (y == ".php") {plang = "PHP";}       if (y == ".go")  {plang = "Go";}      
+                        if (y == ".rs") {plang = "Rust";}       if (y == ".dart") {plang = "Dart";}   
+                        if (y == ".asm") {plang = "Assembly";}  if (y == ".swift") {plang = "Swift";} 
+                        if (y == ".bas") {plang = "VBA";}       if (y == ".m") {plang = "Mathlab";}
+                        if (y == ".ts") {plang = "TypeScript";} if (y == ".lisp") {plang = "Lisp";} 
+                        if (y == ".node") {plang = "NodeJS";}   if (y == ".r") {plang = "R";}
+                        if (y == ".bat") {plang = "Batch";}     if (y == ".rb") {plang = "Ruby";}
+                        if (y == ".sh") {plang = "Shell";}      if (y == ".c") {plang = "C";}
+                        
+                        if
+                        (
+                            y == ".js" ^ y == ".html" ^ y == ".css" ^ y == ".py" ^ y == ".sql" ^ y == ".java"  ^
+                            y == ".ts" ^ y == ".node" ^ y == ".bat" ^ y == ".cs" ^ y == ".cpp" ^ y == ".psd1"  ^
+                            y == ".sh" ^ y == ".psc1" ^ y == ".php" ^ y == ".go" ^ y == ".c"   ^ y == ".psm1"  ^
+                            y == ".rs" ^ y == ".dart" ^ y == ".ps1" ^ y == ".rb" ^ y == ".asm" ^ y == ".swift" ^
+                            y == ".r"  ^ y == ".bas"  ^ y == ".cob"  ^ y == ".pm" ^ y == ".m"   ^ y == ".lisp"  ^
+                            y == ".pl" ^ y == ".cbl"
+                        )                                              
+
+                        { return $"{plang} Source Code"; }
 
                         if
                         (
