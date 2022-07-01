@@ -254,7 +254,7 @@ namespace NullUtils
              |MOVE    - To Move the Files of a Folder to another.
              |DELETE  - To Delete the Files of a Folder.
              |EXIT    - Exits the program.
-             |__________________________________________ ___ __ __ _ _ _
+             |_____________________________________________________________
             ");
                 string MainSwitcher = "BLANK";
                 string? MS = Convert.ToString(Console.ReadLine());
@@ -292,6 +292,10 @@ namespace NullUtils
 
                     case "EXIT":
                         whiler = false;
+                    break;
+
+                    default:
+                        Console.WriteLine("Invalid Message");
                     break;
                 
                 }
