@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Linq;
 using System.Text;
@@ -12,23 +12,72 @@ namespace NullUtils
     {
 
 
-        public class SoisTask
+        public static class Viewing
         {
 
-            
-            public static void InspectFiles(bool SeeAll) //Get the properties of all files in a folder
+            public static void Open()
+            {
+                Console.WriteLine("Please write the Path of the File/Folder you want to use");
+                string I_Path = Console.ReadLine() ?? "ERROR 01";
+                if (I_Path == "ERROR 01") 
+                {
+                    Console.WriteLine("Error 01: No Path was given");
+                }
+                else
+                {
+                    Console.WriteLine(@"
+                    Write the following commands for what you want to do:
+
+                    |1 or OPEN    - Open the file on a program of your choice.
+                    |2 or VIEW    - Show all the files on a folder.
+                    |3 or INSPECT - Get the properties of a file/folder.
+                    |4 or BACK    - Goes Back to Main Menu.
+                    |___________________________________________________");
+                    string Switch = Console.ReadLine() ?? "0";
+                    if (Switch == "1") {Switch = "OPEN"   ;}
+                    if (Switch == "2") {Switch = "VIEW"   ;}
+                    if (Switch == "3") {Switch = "INSPECT";}
+                    if (Switch == "4") {Switch = "BACK";}
+                    Switch = Switch.ToUpper();
+                    switch (Switch)
+                    {
+                        case "OPEN":
+                            Viewing.OpenFile();
+                        break;
+
+                        case "VIEW":
+                            Viewing.ViewFiles();
+                        break;
+
+                        case "INSPECT":
+                            Viewing.InspectFiles(true);
+                        break;
+
+                        case "BACK":
+                            Program.MainMenu();
+                        break;
+                    }
+                }
+            }
+
+           public static void OpenFile()
+            {
+
+            }
+
+           public static void InspectFiles(bool SeeAll) //Get the properties of all files in a folder
             {
                    
                 Console.WriteLine("Write the Path of the folder you want to inspect");
         
                 // Example: "C:\Users\USUARIO\Documents\Programação\Sois File Manager\Programs"
-                string? rootPath = Convert.ToString(Console.ReadLine());
+                string rootPath = Console.ReadLine() ?? "ERROR 01";
                 Console.WriteLine("");
-                bool dirExists = Directory.Exists(rootPath);
+                bool Exists = Directory.Exists(rootPath);
                 bool namingFormat = true;
                 if (rootPath is not null) { namingFormat    = rootPath.Contains(@":\"); }
                 
-                if (rootPath is not null && dirExists == true) //guarantees the program receives a valid file
+                if (rootPath is not null && Exists == true) //guarantees the program receives a valid file
               {
                 
                 var files = Directory.GetFiles(rootPath, "*.*", SearchOption.AllDirectories);
@@ -47,11 +96,9 @@ namespace NullUtils
                 Creation Time:     {info.CreationTimeUtc}
                 Size:              { info.Length } Bytes 
                 Relative Path:     {Path.GetRelativePath(rootPath, file)} "); }
-                Console.WriteLine(" ")
+                Console.WriteLine(" ");
                 
-               
-        
-                ;       
+          
                 }      
         
               }
@@ -61,183 +108,208 @@ namespace NullUtils
                 Console.ReadLine();                 
             }
 
-            public static void ViewFiles() //Simplified InspectFiles()
+           public static void ViewFiles() //Simplified InspectFiles()
             {
                 InspectFiles(false);
             }
 
-            public static void CreateFiles() //Creates a file/folder
+        }
+
+        public static class Management
+        {
+
+            public static void Open()
             {
-                Console.WriteLine("Type the Path of the desired new File/Directory");
-                string? rootPath = Convert.ToString(Console.ReadLine());
+                Console.WriteLine("Please write the Path of the File/Folder you want to use");
+                string I_Path = Console.ReadLine() ?? "ERROR 01";
+                if (I_Path == "ERROR 01") 
+                {
+                    Console.WriteLine("Error 01: No Path was given");
+                }
+                else
+                {
+                    Console.WriteLine(@"
+                    Write the following commands for what you want to do:
+
+                    |1 or CREATE  - Creates a new File/Folder.
+                    |2 or COPY    - Copy a File/Folder.
+                    |3 or MOVE    - Get the properties of a File/Folder.
+                    |4 or DELETE  - Deletes the File/Folder.
+                    |5 or RENAME  - Renames a File/Folder.
+                    |6 or BACK    - Goes Back to Main Menu.
+                    |___________________________________________________");
+                    string Switch = Console.ReadLine() ?? "0";
+                    if (Switch == "1") {Switch = "CREATE" ;}
+                    if (Switch == "2") {Switch = "COPY"   ;}
+                    if (Switch == "3") {Switch = "MOVE"   ;}
+                    if (Switch == "4") {Switch = "DELETE" ;}
+                    if (Switch == "5") {Switch = "RENAME" ;}
+                    if (Switch == "6") {Switch = "BACK"   ;}
+                    Switch = Switch.ToUpper();
+                    switch (Switch)
+                    {
+                        case "CREATE":
+                            Management.CreateFiles(I_Path);
+                        break;
+
+                        case "COPY":
+                            Management.CopyFiles(I_Path);
+                        break;
+
+                        case "MOVE":
+                            Management.MoveFiles(I_Path);
+                        break;
+
+                        case "DELETE":
+                            Management.DeleteFiles(I_Path);
+                        break;
+
+                        case "RENAME":
+                            Management.RenameFiles(I_Path);
+                        break;
+
+                        case "BACK":
+                            Program.MainMenu();
+                        break;
+                    }
+                }
+            }
+
+            public static void CreateFiles(string rootPath) //Creates a file/folder
+            {
                 Console.WriteLine("Write the name of the new File/Directory");
-                string? dirName = Convert.ToString(Console.ReadLine());
+                string I_Name = Console.ReadLine() ?? "ERROR 01";
+                string newPath = "ERROR 01";
+                bool Exists = true;
+                bool FileOrFolder = Path.HasExtension(I_Name); //Diferentiates Files from Folders
+                          
+                Exists = Directory.Exists(rootPath); 
 
-                Console.WriteLine("Is it a File or a Directory ?");
-                string? createFilesSwitch = Convert.ToString(Console.ReadLine());
-                if (createFilesSwitch is not null) {createFilesSwitch.ToUpper();}
-
-
-                string newPath = rootPath + @"\" + dirName;
-                if (createFilesSwitch == "DIRECTORY") {newPath = newPath + @"\"; }
- 
-                bool dirExists = Directory.Exists(newPath);
-                
-                if (dirExists == false) 
+                if (Exists == true)
                 {
-                    if (createFilesSwitch == "DIRECTORY" ^ createFilesSwitch == "FOLDER")
-                     { Directory.CreateDirectory(newPath); }
-                    if (createFilesSwitch == "FILE")
-                     { File.Create(newPath); }
+                    newPath = rootPath + @"\" + I_Name;
 
-                }
-                else  { Console.WriteLine("This Directory already exists"); }
+                    Exists = Directory.Exists(newPath); //sorry for re-using the variable
+
+                    if (FileOrFolder == false && Exists == false)
+                    {
+                        newPath = newPath + @"\";
+
+                        Directory.CreateDirectory(newPath);
+                    }
+
+                    if (FileOrFolder == true && Exists == false)
+                    {
+                        File.Create(newPath);
+                    }
+
+                    if (Exists == false)
+                    {
+                        Console.WriteLine("Write a Valid Directory");
+                    }
+
+                    
+                }               
 
 
             }
 
-            public static void RenameFiles() //Rebanes a file/folder
+            public static void CopyFiles(string rootPath) //Copy a file/folder
             {
-
-                Console.WriteLine("Write the Path of the Folder/File You want to Rename");
-                string? rootPath = string.Empty;
-                rootPath = Convert.ToString(Console.ReadLine());
-                Console.WriteLine("Is it a File or a Folder?");
-                string? FileOrFolder = Convert.ToString(Console.ReadLine());
-                if (FileOrFolder is not null) { FileOrFolder.ToUpper(); }
-                switch (FileOrFolder)
-                {
-                    case "FILE":
-                        Console.WriteLine("Write the old name of the file");
-                        string? oldNameFI = Console.ReadLine();
-                        Console.WriteLine("Write the new name of the file");
-                        string? newNameFI = Console.ReadLine();
-
-                        if (oldNameFI is not null && newNameFI is not null && rootPath is not null)
-                        {
-                            string newPath = rootPath.Replace(oldNameFI, newNameFI);
-
-                            File.Move(rootPath, newPath);
-                        }
-                    break;
-
-                    case "FOLDER":
-                        Console.WriteLine("Write the old name of the folder");
-                        string? oldNameFO = Console.ReadLine();
-                        Console.WriteLine("Write the new name of the folder");
-                        string? newNameFO = Console.ReadLine();
-
-                        if (oldNameFO is not null && newNameFO is not null && rootPath is not null)
-                        {
-                            string newPath = rootPath.Replace(oldNameFO, newNameFO);
-
-                            Directory.Move(rootPath, newPath);
-                        }
-                    break;
-                }
-                
-
-            }
-
-            public static void CopyFiles() //Copy a file/folder
-            {
-                Console.WriteLine("Type the Path of the file or folder to be copied");
-                string? rootPath = Convert.ToString(Console.ReadLine());
                 Console.WriteLine("Write the Path of the target folder for the copied file/folder");
-                string? destPath = Convert.ToString(Console.ReadLine());
-                bool dotException = false;
-                if (rootPath is not null) { dotException = rootPath.Contains("."); }
-                
-                //Copies Files and Folders with "."
-                if (rootPath is not null && destPath is not null && dotException == true)
-               { 
+                string destPath = Console.ReadLine() ?? "ERROR 01";
+                bool FileOrFolder = Path.HasExtension(rootPath); //Diferentiates Files from Folders
+ 
+                Extra.ErrorCheck();
+
+                if (FileOrFolder == false) 
+                {
                     string[] files = Directory.GetFiles(rootPath);                 
 
                     foreach (string file in files)             
                     {
                         var info = new FileInfo(file);
                         var typecheck = Extra.TypeCheck((Convert.ToString(info.Extension)));
-
-                        if (typecheck is "Unknown") //Exception for Folders with "."
-                        {
-                            Extra.Copy(rootPath, destPath);
-                        }
-                        else //Case for files
-                        {
-                            Console.WriteLine(file);
-                            Console.WriteLine(" ");
-                            Console.WriteLine($"The Path is {destPath}/{ Path.GetFileName(file) }");
-                            File.Copy(file, $"{destPath}/{ Path.GetFileName(file) }");                            
-                        }
-                    }
-                   
-                }
-                //Copies Folders without "."
-                if (rootPath is not null && destPath is not null && dotException == false)
-                {
-                    string[] dirs = Directory.GetFiles(rootPath);
-
-                    foreach (string file in dirs)             
-                    {
-
-                        Extra.Copy(rootPath, destPath);
-
-                    }                  
-                }
-                
-
-
-               
-            }
-        
-            public static void MoveFiles() //Move a file/folder
-            {
-                Console.WriteLine("Type the Path of the folder");
-                string? rootPath = Convert.ToString(Console.ReadLine());
-                Console.WriteLine("Write the Path of the destination of your folder");
-                string? destPath = Convert.ToString(Console.ReadLine());
-                if (rootPath is not null && destPath is not null)
-               { 
-                string[] files = Directory.GetFiles(rootPath);
-
-                foreach(string file in files)
-                {
-                    File.Move(file, $"{destPath}/{ Path.GetFileName(file) }");
-                }
-
-               } 
-            }
-        
-            public static void DeleteFiles()
-            {
-                Console.WriteLine("Write the Path of your file/folder");
-                string? rootPath = Convert.ToString(Console.ReadLine());
-                Console.WriteLine("Do you want to delete a FILE or a FOLDER");
-                string? FileOrFolder = Convert.ToString(Console.ReadLine());
-                if (FileOrFolder is not null && rootPath is not null) 
-                {FileOrFolder.ToUpper(); 
-                
-                switch (FileOrFolder)
-                {
-                    case "FILE":
-                        File.Delete(rootPath);
-                    break;
-
-                    case "FOLDER":
                         
-                        Directory.Delete(rootPath, true);
-                    break;
-
-                    default:
-                    Console.WriteLine ("Type ''FILE'' or ''FOLDER'' ");
-                    break; 
+                        Extra.Copy(rootPath, destPath);
+                    }                    
+                }
+                if (FileOrFolder == true) 
+                {
+                    File.Copy(rootPath, $"{destPath}/{ Path.GetFileName(rootPath) }");              
                 }
 
+                               
+            }
+                       
+            public static void MoveFiles(string rootPath) //Move a file/folder
+            {
+                Console.WriteLine("Write the Path of the destination of your folder");
+                string destPath = Console.ReadLine() ?? "ERROR 1";
+                bool FileOrFolder = Path.HasExtension(rootPath); //Diferentiates Files from Folders
+                Extra.ErrorCheck();
+                if (FileOrFolder == false)
+                {
+
+                    string[] files = Directory.GetFiles(rootPath);
+
+                    foreach(string file in files)
+                    {
+                        File.Move(rootPath, $"{destPath}/{ Path.GetFileName(rootPath) }"); 
+                    }                    
                 }
+                if (FileOrFolder == true)
+                {
+                    File.Move(rootPath, $"{destPath}/{ Path.GetFileName(rootPath) }"); 
+                }
+
+            }
+        
+            public static void DeleteFiles(string rootPath) //Deletes a file/folder
+            {
+                bool FileOrFolder = Path.HasExtension(rootPath);
+
+                if (FileOrFolder == true)
+                {
+                    File.Delete(rootPath);
+                }
+                if (FileOrFolder == false)
+                {
+                    Directory.Delete(rootPath, true);
+                }
+
+            }
+        
+           public static void RenameFiles(string rootPath) //Renames a file/folder
+            {
+
+                bool FileOrFolder = Path.HasExtension(rootPath); //Diferentiates Files from Folders
+                if (FileOrFolder == true)
+                {
+                    Console.WriteLine("Write the old name of the file");
+                    string oldNameFI = Console.ReadLine() ?? "ERROR 01";
+                    Console.WriteLine("Write the new name of the file");
+                    string newNameFI = Console.ReadLine() ?? "Unnamed";
+
+                    string newPath = rootPath.Replace(oldNameFI, newNameFI);
+                    File.Move(rootPath, newPath);                 
+                }
+                if (FileOrFolder == false)
+                {
+                    Console.WriteLine("Write the old name of the folder");
+                    string oldNameFO = Console.ReadLine() ?? "ERROR 01";
+                    Console.WriteLine("Write the new name of the folder");
+                    string newNameFO = Console.ReadLine() ?? "Unnamed";
+
+                    string newPath = rootPath.Replace(oldNameFO, newNameFO);
+                    Directory.Move(rootPath, newPath);
+                }
+
+        
             }
         }
 
-        public static void Main(string[] args)
+        public static void MainMenu()
         {
             bool whiler = true;
 
@@ -246,48 +318,23 @@ namespace NullUtils
              Console.WriteLine(@"
              Write the following commands For what you want to do:
 
-             |VIEW    - To Get the Files of a Folder (and their path).
-             |INSPECT - To Get the Files of a Folder (and their properties).
-             |CREATE  - To Create a new File or a Folder.
-             |RENAME  - Rename a File or a Folder.
-             |COPY    - To Copy the Files of a Folder to another.
-             |MOVE    - To Move the Files of a Folder to another.
-             |DELETE  - To Delete the Files of a Folder.
+             |VIEW    - To Access Files.
+             |MANAGE  - To Manage Files.
              |EXIT    - Exits the program.
              |_____________________________________________________________
             ");
                 string MainSwitcher = "BLANK";
-                string? MS = Convert.ToString(Console.ReadLine());
+                string? MS = Console.ReadLine();
                 if (MS is not null) { MainSwitcher = MS.ToUpper(); }
                 
                 switch (MainSwitcher)
                 {
                     case "VIEW":
-                        SoisTask.ViewFiles();
+                        Viewing.Open();
                     break;
 
-                    case "INSPECT":
-                        SoisTask.InspectFiles(true);
-                    break;
-
-                    case "CREATE":
-                        SoisTask.CreateFiles();
-                    break;
-
-                    case "RENAME":
-                        SoisTask.RenameFiles();
-                    break;
-
-                    case "COPY":
-                        SoisTask.CopyFiles();
-                    break;
-
-                    case "MOVE":
-                        SoisTask.MoveFiles();
-                    break;
-
-                    case "DELETE":
-                        SoisTask.DeleteFiles();
+                    case "MANAGE":
+                        Management.Open();
                     break;
 
                     case "EXIT":
@@ -300,23 +347,17 @@ namespace NullUtils
                 
                 }
             }
-            
+                        
+        }
+        public static void Main(string[] args)
+        {
+            Program.MainMenu();
         }
 
         
         public static class Extra
         {
 
-                public static void GetPath(string surrogate1)
-                {
-
-                    
-
-                }
-            
-
-                //Content from this class adapted from https://code.4noobz.net/c-copy-a-folder-its-content-and-the-subfolders/
-                //Please visit it since i did not want to copy the comments
                 public static void Copy(string root, string dest)
                     {
                     
@@ -485,7 +526,10 @@ namespace NullUtils
                     
                 }
             
+                public static void ErrorCheck()
+                {
 
+                }
         }
 
         
