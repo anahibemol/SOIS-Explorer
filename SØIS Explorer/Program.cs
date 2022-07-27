@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,86 +18,89 @@ namespace NullUtils
 
             public static void Open()
             {
-                Console.WriteLine("Please write the Path of the File/Folder you want to use");
-                string I_Path = Console.ReadLine() ?? "ERROR 01";
-                if (I_Path == "ERROR 01") 
+            Console.WriteLine("Please write the Path of the File/Folder you want to use");
+            string I_Path = Console.ReadLine() ?? "ERROR 01";
+
+            Extra.ErrorCheck(I_Path);
+
+            Console.WriteLine("Error 01: No Path was given");
+            
+                Console.WriteLine(@"
+                Write the following commands for what you want to do:
+
+                |1 or OPEN    - Open the file on a program of your choice.
+                |2 or VIEW    - Show all the files on a folder.
+                |3 or INSPECT - Get the properties of a file/folder.
+                |4 or BACK    - Goes Back to Main Menu.
+                |___________________________________________________");
+                string Switch = Console.ReadLine() ?? "0";
+                if (Switch == "1") {Switch = "OPEN"   ;}
+                if (Switch == "2") {Switch = "VIEW"   ;}
+                if (Switch == "3") {Switch = "INSPECT";}
+                if (Switch == "4") {Switch = "BACK";}
+                Switch = Switch.ToUpper();
+                switch (Switch)
                 {
-                    Console.WriteLine("Error 01: No Path was given");
+                    case "OPEN":
+                        Viewing.OpenFile(I_Path);
+                    break;
+
+                    case "VIEW":
+                        Viewing.ViewFiles(I_Path);
+                    break;
+
+                    case "INSPECT":
+                        Viewing.InspectFiles(I_Path, true);
+                    break;
+
+                    case "BACK":
+                        Program.MainMenu();
+                    break;
                 }
-                else
-                {
-                    Console.WriteLine(@"
-                    Write the following commands for what you want to do:
+            
+        }
 
-                    |1 or OPEN    - Open the file on a program of your choice.
-                    |2 or VIEW    - Show all the files on a folder.
-                    |3 or INSPECT - Get the properties of a file/folder.
-                    |4 or BACK    - Goes Back to Main Menu.
-                    |___________________________________________________");
-                    string Switch = Console.ReadLine() ?? "0";
-                    if (Switch == "1") {Switch = "OPEN"   ;}
-                    if (Switch == "2") {Switch = "VIEW"   ;}
-                    if (Switch == "3") {Switch = "INSPECT";}
-                    if (Switch == "4") {Switch = "BACK";}
-                    Switch = Switch.ToUpper();
-                    switch (Switch)
-                    {
-                        case "OPEN":
-                            Viewing.OpenFile();
-                        break;
+           public static void OpenFile(string rootPath)
+            {
+                Console.WriteLine("Write the path of the program you want to open your file/folder with");
+                string programPath = Console.ReadLine() ?? "ERROR 01";
 
-                        case "VIEW":
-                            Viewing.ViewFiles();
-                        break;
+                Extra.ErrorCheck(programPath);
 
-                        case "INSPECT":
-                            Viewing.InspectFiles(true);
-                        break;
-
-                        case "BACK":
-                            Program.MainMenu();
-                        break;
-                    }
-                }
+                Process.Start(programPath, rootPath);
+                
             }
 
-           public static void OpenFile()
-            {
-
-            }
-
-           public static void InspectFiles(bool SeeAll) //Get the properties of all files in a folder
-            {
-                   
-                Console.WriteLine("Write the Path of the folder you want to inspect");
-        
-                // Example: "C:\Users\USUARIO\Documents\Programação\Sois File Manager\Programs"
-                string rootPath = Console.ReadLine() ?? "ERROR 01";
+           public static void InspectFiles(string rootPath, bool SeeAll) //Get the properties of all files in a folder
+            {                  
                 Console.WriteLine("");
                 bool Exists = Directory.Exists(rootPath);
                 bool namingFormat = true;
-                if (rootPath is not null) { namingFormat    = rootPath.Contains(@":\"); }
+
+                namingFormat    = rootPath.Contains(@":\");
                 
-                if (rootPath is not null && Exists == true) //guarantees the program receives a valid file
+                if (Exists == true) //guarantees the program receives a valid file
               {
                 
                 var files = Directory.GetFiles(rootPath, "*.*", SearchOption.AllDirectories);
                 foreach (string file in files)
                 {
                       
-                var info = new FileInfo(file);
-                Console.WriteLine(@$"                        { Path.GetFileName(file) } 's Properties:
-                Name:              {info.Name}
-                Type:              {Extra.TypeCheck((Convert.ToString(info.Extension)))} ({info.Extension})
-                Directory:         {Path.GetDirectoryName(file)}");
+                    var info = new FileInfo(file);
+                    Console.WriteLine(@$"                        { Path.GetFileName(file) } 's Properties:
+                    Name:              {info.Name}
+                    Type:              {Extra.TypeCheck((Convert.ToString(info.Extension)))} ({info.Extension})
+                    Directory:         {Path.GetDirectoryName(file)}");
                 if (SeeAll == true)
-              { Console.WriteLine(@$"
-                Last Acessed At:   {info.LastAccessTime}
-                Last Modified At:  {info.LastWriteTimeUtc}
-                Creation Time:     {info.CreationTimeUtc}
-                Size:              { info.Length } Bytes 
-                Relative Path:     {Path.GetRelativePath(rootPath, file)} "); }
-                Console.WriteLine(" ");
+                {
+                    Console.WriteLine(@$"
+                    Last Acessed At:   {info.LastAccessTime}
+                    Last Modified At:  {info.LastWriteTimeUtc}
+                    Creation Time:     {info.CreationTimeUtc}
+                    Size:              { info.Length } Bytes 
+                    Relative Path:     {Path.GetRelativePath(rootPath, file)} "); 
+                }
+                    Console.WriteLine(" ");
                 
           
                 }      
@@ -108,9 +112,9 @@ namespace NullUtils
                 Console.ReadLine();                 
             }
 
-           public static void ViewFiles() //Simplified InspectFiles()
+           public static void ViewFiles(string I_Path) //Simplified InspectFiles()
             {
-                InspectFiles(false);
+                InspectFiles(I_Path, false);
             }
 
         }
@@ -122,57 +126,49 @@ namespace NullUtils
             {
                 Console.WriteLine("Please write the Path of the File/Folder you want to use");
                 string I_Path = Console.ReadLine() ?? "ERROR 01";
-                if (I_Path == "ERROR 01") 
+
+                Extra.ErrorCheck(I_Path);
+
+
+                Console.WriteLine(@"
+                Write the following commands for what you want to do:
+                |1 or CREATE  - Creates a new File/Folder.
+                |2 or COPY    - Copy a File/Folder.
+                |3 or MOVE    - Get the properties of a File/Folder.
+                |4 or DELETE  - Deletes the File/Folder.
+                |5 or RENAME  - Renames a File/Folder.
+                |6 or BACK    - Goes Back to Main Menu.
+                |___________________________________________________");
+                string Switch = Console.ReadLine() ?? "0";
+                if (Switch == "1") {Switch = "CREATE" ;}
+                if (Switch == "2") {Switch = "COPY"   ;}
+                if (Switch == "3") {Switch = "MOVE"   ;}
+                if (Switch == "4") {Switch = "DELETE" ;}
+                if (Switch == "5") {Switch = "RENAME" ;}
+                if (Switch == "6") {Switch = "BACK"   ;}
+                Switch = Switch.ToUpper();
+                switch (Switch)
                 {
-                    Console.WriteLine("Error 01: No Path was given");
+                    case "CREATE":
+                        Management.CreateFiles(I_Path);
+                    break;
+                    case "COPY":
+                        Management.CopyFiles(I_Path);
+                    break;
+                    case "MOVE":
+                        Management.MoveFiles(I_Path);
+                    break;
+                    case "DELETE":
+                        Management.DeleteFiles(I_Path);
+                    break;
+                    case "RENAME":
+                        Management.RenameFiles(I_Path);
+                    break;
+                    case "BACK":
+                        Program.MainMenu();
+                    break;
                 }
-                else
-                {
-                    Console.WriteLine(@"
-                    Write the following commands for what you want to do:
-
-                    |1 or CREATE  - Creates a new File/Folder.
-                    |2 or COPY    - Copy a File/Folder.
-                    |3 or MOVE    - Get the properties of a File/Folder.
-                    |4 or DELETE  - Deletes the File/Folder.
-                    |5 or RENAME  - Renames a File/Folder.
-                    |6 or BACK    - Goes Back to Main Menu.
-                    |___________________________________________________");
-                    string Switch = Console.ReadLine() ?? "0";
-                    if (Switch == "1") {Switch = "CREATE" ;}
-                    if (Switch == "2") {Switch = "COPY"   ;}
-                    if (Switch == "3") {Switch = "MOVE"   ;}
-                    if (Switch == "4") {Switch = "DELETE" ;}
-                    if (Switch == "5") {Switch = "RENAME" ;}
-                    if (Switch == "6") {Switch = "BACK"   ;}
-                    Switch = Switch.ToUpper();
-                    switch (Switch)
-                    {
-                        case "CREATE":
-                            Management.CreateFiles(I_Path);
-                        break;
-
-                        case "COPY":
-                            Management.CopyFiles(I_Path);
-                        break;
-
-                        case "MOVE":
-                            Management.MoveFiles(I_Path);
-                        break;
-
-                        case "DELETE":
-                            Management.DeleteFiles(I_Path);
-                        break;
-
-                        case "RENAME":
-                            Management.RenameFiles(I_Path);
-                        break;
-
-                        case "BACK":
-                            Program.MainMenu();
-                        break;
-                    }
-                }
+            
             }
 
             public static void CreateFiles(string rootPath) //Creates a file/folder
@@ -220,7 +216,7 @@ namespace NullUtils
                 string destPath = Console.ReadLine() ?? "ERROR 01";
                 bool FileOrFolder = Path.HasExtension(rootPath); //Diferentiates Files from Folders
  
-                Extra.ErrorCheck();
+                Extra.ErrorCheck(destPath);
 
                 if (FileOrFolder == false) 
                 {
@@ -247,7 +243,10 @@ namespace NullUtils
                 Console.WriteLine("Write the Path of the destination of your folder");
                 string destPath = Console.ReadLine() ?? "ERROR 1";
                 bool FileOrFolder = Path.HasExtension(rootPath); //Diferentiates Files from Folders
-                Extra.ErrorCheck();
+
+                Extra.ErrorCheck(rootPath);
+                Extra.ErrorCheck(destPath);
+
                 if (FileOrFolder == false)
                 {
 
@@ -526,9 +525,30 @@ namespace NullUtils
                     
                 }
             
-                public static void ErrorCheck()
+                public static void ErrorCheck(string Error)
                 {
+                    if (Error == "ERROR 01")
+                    {
+                        Console.WriteLine($@"
+                        Empty Path, please write something on the same guidelines as
+                        ``C:\Users\USUARIO\Documents\Important``
+                        
+                        Your Path: {Error}");
 
+                        Console.ReadLine();
+                        Program.MainMenu();
+                    }
+                    if (Error == "ERROR 02")
+                    {
+                        Console.WriteLine($@"
+                        Invalid Path, please write something on the same guidelines as
+                        ``C:\Users\USUARIO\Documents\Important``
+                        
+                        Your Path: {Error}");
+
+                        Console.ReadLine();
+                        Program.MainMenu();
+                    }
                 }
         }
 
