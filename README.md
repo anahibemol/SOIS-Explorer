@@ -19,12 +19,16 @@ SOIS Explorer is a Command-Line C# Program for File and Folder Management design
 
 To Open the program, go to `Sois-Explorer/bin/Debug/net6.0` and click on CalcMachine.exe
 
-[TO BE ADDED]
+[FLOWCHART TO BE ADDED]
 
 By being a C# 10 Program, it requires the .NET Frameork 6 to run, download it [here](https://dotnet.microsoft.com/en-us/download/dotnet/6.0).
 
 <div id='id-section3'/>
 
-## WHY should I useSOIS Explorer
+## WHY should I use SOIS Explorer
 
-[TO BE ADDED]
+- It has Intuitive and Abstracted Commands so the user doesn't have to learn secret keywords, so you can use without reading any docs.
+- It's super light and probably will not have to be repaired unless you do shit.
+- Forkable and Maintanable, code is somewhat organized for that purpose.
+- Can get file properties in bulk (all the properties of all files on a folder), something Windows Explorer cannot do.
+- Is being actively developed.
