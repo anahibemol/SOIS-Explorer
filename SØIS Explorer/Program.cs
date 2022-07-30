@@ -317,16 +317,19 @@ namespace NullUtils
              Console.WriteLine(@"
              Write the following commands For what you want to do:
 
-             |VIEW    - To Access Files.
-             |MANAGE  - To Manage Files.
-             |EXIT    - Exits the program.
+             |1 or VIEW    - To Access Files.
+             |2 or MANAGE  - To Manage Files.
+             |3 or EXIT    - Exits the program.
              |_____________________________________________________________
             ");
-                string MainSwitcher = "BLANK";
-                string? MS = Console.ReadLine();
-                if (MS is not null) { MainSwitcher = MS.ToUpper(); }
+                string MS = Console.ReadLine() ?? "BLANK";
+                if (MS == "1") { MS = "VIEW";   }
+                if (MS == "2") { MS = "MANAGE"; }
+                if (MS == "3") { MS = "EXIT";   }
                 
-                switch (MainSwitcher)
+                { MS = MS.ToUpper(); }
+                
+                switch (MS)
                 {
                     case "VIEW":
                         Viewing.Open();
@@ -341,7 +344,7 @@ namespace NullUtils
                     break;
 
                     default:
-                        Console.WriteLine("Invalid Message");
+                        Console.WriteLine("Invalid Command");
                     break;
                 
                 }
