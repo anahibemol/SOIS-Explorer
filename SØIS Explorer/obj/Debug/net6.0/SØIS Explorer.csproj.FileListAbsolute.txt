@@ -58,3 +58,18 @@ C:\Users\USUARIO\Documents\Programação\SØIS Explorer\SOIS Explorer 1.2.2\SØI
 C:\Users\USUARIO\Documents\Programação\SØIS Explorer\SOIS Explorer 1.2.2\SØIS Explorer\obj\Debug\net6.0\SØIS Explorer.pdb
 C:\Users\USUARIO\Documents\Programação\SØIS Explorer\SOIS Explorer 1.2.2\SØIS Explorer\obj\Debug\net6.0\SØIS Explorer.genruntimeconfig.cache
 C:\Users\USUARIO\Documents\Programação\SØIS Explorer\SOIS Explorer 1.2.2\SØIS Explorer\obj\Debug\net6.0\ref\SØIS Explorer.dll
+C:\Users\USUARIO\Documents\GitHub\SOIS-Explorer\SØIS Explorer\bin\Debug\net6.0\SØIS Explorer.exe
+C:\Users\USUARIO\Documents\GitHub\SOIS-Explorer\SØIS Explorer\bin\Debug\net6.0\SØIS Explorer.deps.json
+C:\Users\USUARIO\Documents\GitHub\SOIS-Explorer\SØIS Explorer\bin\Debug\net6.0\SØIS Explorer.runtimeconfig.json
+C:\Users\USUARIO\Documents\GitHub\SOIS-Explorer\SØIS Explorer\bin\Debug\net6.0\SØIS Explorer.dll
+C:\Users\USUARIO\Documents\GitHub\SOIS-Explorer\SØIS Explorer\bin\Debug\net6.0\SØIS Explorer.pdb
+C:\Users\USUARIO\Documents\GitHub\SOIS-Explorer\SØIS Explorer\obj\Debug\net6.0\SØIS Explorer.csproj.AssemblyReference.cache
+C:\Users\USUARIO\Documents\GitHub\SOIS-Explorer\SØIS Explorer\obj\Debug\net6.0\SØIS Explorer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\USUARIO\Documents\GitHub\SOIS-Explorer\SØIS Explorer\obj\Debug\net6.0\SØIS Explorer.AssemblyInfoInputs.cache
+C:\Users\USUARIO\Documents\GitHub\SOIS-Explorer\SØIS Explorer\obj\Debug\net6.0\SØIS Explorer.AssemblyInfo.cs
+C:\Users\USUARIO\Documents\GitHub\SOIS-Explorer\SØIS Explorer\obj\Debug\net6.0\SØIS Explorer.csproj.CoreCompileInputs.cache
+C:\Users\USUARIO\Documents\GitHub\SOIS-Explorer\SØIS Explorer\obj\Debug\net6.0\SØIS Explorer.dll
+C:\Users\USUARIO\Documents\GitHub\SOIS-Explorer\SØIS Explorer\obj\Debug\net6.0\refint\SØIS Explorer.dll
+C:\Users\USUARIO\Documents\GitHub\SOIS-Explorer\SØIS Explorer\obj\Debug\net6.0\SØIS Explorer.pdb
+C:\Users\USUARIO\Documents\GitHub\SOIS-Explorer\SØIS Explorer\obj\Debug\net6.0\SØIS Explorer.genruntimeconfig.cache
+C:\Users\USUARIO\Documents\GitHub\SOIS-Explorer\SØIS Explorer\obj\Debug\net6.0\ref\SØIS Explorer.dll
