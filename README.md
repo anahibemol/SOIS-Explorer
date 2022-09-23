@@ -1,6 +1,6 @@
 # SOIS Explorer
 
-For the questions you may have about CalcMachine:
+For the questions you may have about SOIS Explorer:
 
 - [**WHAT** Is SOIS Explorer ?](#id-section1)
 - [**HOW**  To SOIS Explorer ?](#id-section2)
